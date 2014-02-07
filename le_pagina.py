@@ -1,20 +1,13 @@
 from readability.readability import Document
 from HTMLParser import HTMLParser
-from datetime import datetime, date, timedelta
 import urllib
 import feedparser
 import re
-import mysql.connector
-import time
-
-conexao = mysql.connector.connect(user='garruda', password='garruda', host='127.0.0.1', database='noticias')
+import banco_dados
 
 def noticia_importada(link):
 
-	count_noticia = conexao.cursor()
-
-	query_noticia = ('select count(*) from noticias where link =  %s')
-	count_noticia.execute(query_noticia, (link,))
+	count_noticia = banco_dados.conta_noticias(link)
 
 	return count_noticia.fetchone()[0] > 0
 
@@ -41,15 +34,7 @@ def le_site(link, titulo, id_feed):
 	for paragrafo in paragrafos:
 		texto_limpo =  texto_limpo + re.sub('<.*?>', '', paragrafo)
 
-	cursor_noticia = conexao.cursor()
-
-	#Insere na tabela
-	add_noticia = ('insert into noticias (link, titulo, corpo, data_importacao, id_feed) values (%s, %s, %s, %s, %s)')
-	data_noticia = (link, titulo, texto_limpo, date(int(time.strftime('%y')), int(time.strftime('%m')), int(time.strftime('%d'))),id_feed)
-	cursor_noticia.execute(add_noticia, data_noticia)
-
-	#Fecha transacao
-	conexao.commit()
+	banco_dados.adiciona_noticia(link, titulo, texto_limpo, id_feed)
 
 def le_feed(id_feed, link):
 
@@ -62,16 +47,12 @@ def le_feed(id_feed, link):
 
 def processa_feeds():
 
-	cursor_feeds = conexao.cursor()
-
-	#Procura os feeds armazenados no banco de dados
-	query_feeds = ('select * from feeds')
-	cursor_feeds.execute(query_feeds)
+	cursor_feeds = banco_dados.cursor_feeds()
 
 	#Para cada feed Atom, processa os links retornados
 	for (id_feed, link) in cursor_feeds:
 		le_feed(id_feed, link)
 
-	conexao.close()
+	banco_dados.fecha_conexao()
 
 processa_feeds()
