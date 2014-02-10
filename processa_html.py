@@ -1,6 +1,7 @@
 import urllib
 import re
 from readability.readability import Document
+import processa_estadao
 from HTMLParser import HTMLParser
 
 def abre_url(link):
@@ -17,11 +18,16 @@ def limpa_html(html):
 
 def html_texto(html):
 
+
 	#Seleciona apenas o HTML referente ao texto
 	html = limpa_html(html)
 
+	#Transforma em Unicode
+	html = html.encode('utf-8')
+
 	#Remove as quebras de linha do HTML
 	html = html.replace('\n', '')
+
 	paragrafos = html.split('<p>')
 
 	texto_limpo = ''
