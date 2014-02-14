@@ -39,6 +39,7 @@ def le_site(link, titulo, id_feed, processador_html):
 
 def processa_feeds():
 	
+	#Procura os feeds ativos no banco de dados
 	cursor_feeds = bd.procura_feeds()
 
 	#Para cada feed Atom, processa os links retornados

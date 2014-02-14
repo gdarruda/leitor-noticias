@@ -1,4 +1,5 @@
  # coding=utf-8
+
 import re
 from readability.readability import Document
 
@@ -14,17 +15,17 @@ class ProcessadorHTML:
 		self.html = Document(self.html).summary()
 
 	#Utiliza a API do readability para recuperar apenas a parte principal do texto
-	def altera_codificao(self, codificacao):
+	def decodifica(self, codificacao):
 
 		#Codifica o texto em UTF8 
-		self.html = self.html.encode('utf-8')
+		self.html = self.html.decode(codificacao).encode('utf-8')
 
 	#Funcao basica para processar uma pagina HTML de noticia
 	def processa_html(self):
 
-		self.utiliza_readability()
+		self.decodifica('utf-8')
 
-		self.altera_codificao('utf-8')
+		self.utiliza_readability()
 
 		#Remove as quebras de linha do HTML
 		self.html = self.html.replace('\n', '')
@@ -46,9 +47,9 @@ class ProcessadorEstadao(ProcessadorHTML):
 
 	def processa_html(self):
 
-		self.utiliza_readability()
+		self.decodifica('utf-8')
 
-		self.altera_codificao('utf-8')
+		self.utiliza_readability()
 
 		#Apaga o caracter '&#13;'
 		self.html = self.html.replace('&#13;', '')
@@ -66,8 +67,36 @@ class ProcessadorEstadao(ProcessadorHTML):
 		for paragrafo in paragrafos:
 
 			#Verifica se o paragrafo eh referente aos links relacionados presentes no meio da materia
-			if paragrafo.find('Veja também:') > -1:
+			if paragrafo.find('Veja também:'.decode('utf-8')) > -1:
 				continue
+
+			texto_limpo =  texto_limpo + re.sub('<.*?>', '', paragrafo)
+
+		return texto_limpo
+
+class ProcessadorFolha(ProcessadorHTML):
+	'Classe para transformacao de paginas da Folha em texto limpo'
+
+	def processa_html(self):
+
+		self.decodifica('cp1252')
+
+		self.utiliza_readability()
+
+		#Apaga o caracter '&#13;'
+		self.html = self.html.replace('&#13;', '')
+
+		#Remove as quebras de linha do HTML
+		self.html = self.html.replace('\n', '')
+
+		#Separa o texto em paragrafos atraves da TAG "<p>"
+		paragrafos = self.html.split('<p>')
+		
+		#Com o texto limpo
+		texto_limpo = ''
+
+		#Remove todas as TAGs
+		for paragrafo in paragrafos:
 
 			texto_limpo =  texto_limpo + re.sub('<.*?>', '', paragrafo)
 
