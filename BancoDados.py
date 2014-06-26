@@ -17,6 +17,11 @@ def adiciona_noticia(self, link, titulo, texto_limpo, id_feed):
 def procura_feeds(self):
 	raise NotImplementedError
 
+#Procura os perfis de Twitter ativos
+def procura_perfis(self):
+	raise NotImplementedError
+
+#Fecha a conexaoo com o banco
 def fecha_conexao(self):
 	raise NotImplementedError
 
@@ -36,12 +41,12 @@ class BancoMySQL(BancoDados):
 
 		return contador_noticia
 
-	def adiciona_noticia(self, link, titulo, texto_limpo, id_feed):
+	def adiciona_noticia(self, link, titulo, texto_limpo, id_feed, id_perfil):
 
 		cursor_noticia = self.conexao.cursor()
 
-		insert_noticia = ('insert into noticias (link, titulo, corpo, data_importacao, id_feed) values (%s, %s, %s, %s, %s)')
-		dados_noticia = (link, titulo, texto_limpo, date(int(time.strftime('%y')), int(time.strftime('%m')), int(time.strftime('%d'))),id_feed)
+		insert_noticia = ('insert into noticias (link, titulo, corpo, data_importacao, id_feed, id_perfil) values (%s, %s, %s, %s, %s, %s)')
+		dados_noticia = (link, titulo, texto_limpo, date(int(time.strftime('%y')), int(time.strftime('%m')), int(time.strftime('%d'))),id_feed, id_perfil)
 	
 		cursor_noticia.execute(insert_noticia, dados_noticia)
 
@@ -55,6 +60,15 @@ class BancoMySQL(BancoDados):
 		cursor_feeds.execute(query_feeds)
 
 		return cursor_feeds
+
+	def procura_perfis(self):
+		
+		cursor_tweets = self.conexao.cursor()
+
+		query_tweets = ('select id_perfil, nome , processador_html from perfis_twitter where ind_ativo = \'S\'')
+		cursor_tweets.execute(query_tweets)
+
+		return cursor_tweets
 
 	def fecha_conexao(self):
 
