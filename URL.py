@@ -2,14 +2,6 @@
 import urllib
 import ProcessadorHTML
 
-def abre_url(link):
-
-	#Abre URL e carrega o HTML em uma String
-	url = urllib.urlopen(link)
-	html = url.read()
-
-	return html
-
 def extrai_link(tweet):
 
 	#Encontra a URL do Tweet
@@ -27,7 +19,7 @@ def extrai_link(tweet):
 		return tweet[posic_url_ini:]
 	else:
 		return tweet[posic_url_ini:posic_url_fim]
-	
+
 
 def url_importada(link, bd):
 
@@ -36,26 +28,3 @@ def url_importada(link, bd):
 
 	#Retorna o contador
 	return count_noticia.fetchone()[0] > 0
-
-def le_site(link, processador_html, bd):
-
-	#Verifica se a noticia foi importada
-	if url_importada(link, bd):
-		return
-
-	#Recupera o HTML da URL
-	html = abre_url(link)
-
-	#Caso nao esteja paramerizado nenhum tipo, utiliza o valor padrao
-	if processador_html is None:
-		processador_html = 'ProcessadorHTML'
-
-	#Instancia dinamicamente o processador de HTML
-	try:
-		ph = getattr(ProcessadorHTML, processador_html)(html)
-	except AttributeError:
-		print 'Classe nao carregada: ' +  processador_html
-		return
-
-	#Limpa o texto em html
-	return ph.processa_html()

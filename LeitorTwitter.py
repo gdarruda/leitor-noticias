@@ -1,5 +1,6 @@
 import twitter
 import URL
+from Alchemy import Alchemy
 
 class LeitorTwitter(object):
 	'Processa os posts do Twitter'
@@ -9,7 +10,7 @@ class LeitorTwitter(object):
 		self.bd = bd
 
 	def le_tweets(self, nome):
-	
+
 		tweets = self.api.GetUserTimeline(screen_name=nome)
 
 		return tweets
@@ -20,10 +21,13 @@ class LeitorTwitter(object):
 		cursor_tweets = self.bd.procura_perfis()
 
 		#Para cada perfil do Twitter, processa os tweets retornados
-		for (id_perfil, nome, processador_html) in cursor_tweets:
+		for (id_perfil, nome) in cursor_tweets:
 
 			#Abre os ultimos tweets importados
 			lt = self.le_tweets(nome)
+
+			#API do Alchemy
+			api = Alchemy()
 
 			#Processa todos os tweets
 			for tweet in lt:
@@ -35,8 +39,8 @@ class LeitorTwitter(object):
 				if link == None:
 					continue
 
-				#Recupera o texto limpo
-				texto_limpo = URL.le_site(link, processador_html, self.bd)
+				#Chama o AlchemyAPI para limpar o texto
+				texto_processado = api.processa_html(link)
 
 				#Adiciona noticia no Banco de Dados
-				self.bd.adiciona_noticia(link, tweet.text, texto_limpo, None, id_perfil)
+				self.bd.adiciona_noticia(link, tweet.text, texto_processado, None, id_perfil)

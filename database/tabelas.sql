@@ -1,6 +1,6 @@
-CREATE TABLE feeds( id_feed INTEGER AUTO_INCREMENT, link TEXT, ind_ativo CHAR(1), processador_html TEXT, PRIMARY KEY (id_feed));
+CREATE TABLE feeds( id_feed INTEGER AUTO_INCREMENT, link TEXT, ind_ativo CHAR(1) PRIMARY KEY (id_feed));
 
-CREATE TABLE perfis_twitter( id_perfil INTEGER AUTO_INCREMENT, nome TEXT, ind_ativo CHAR(1), processador_html TEXT, PRIMARY KEY (id_perfil));
+CREATE TABLE perfis_twitter( id_perfil INTEGER AUTO_INCREMENT, nome TEXT, ind_ativo CHAR(1) PRIMARY KEY (id_perfil));
 
 CREATE TABLE noticias
 (

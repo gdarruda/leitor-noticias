@@ -13,5 +13,5 @@ def executa():
 	lt.processa_twitter()
 
 	bd.fecha_conexao()
-	
+
 executa()
