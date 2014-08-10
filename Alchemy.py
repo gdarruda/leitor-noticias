@@ -10,9 +10,14 @@ class Alchemy(object):
     self.alchemy_api = AlchemyAPI()
 
   def processa_html(self, link):
-    
+
     #Retorna o texto limpo a partir de uma URL
     return self.alchemy_api.text('url', link)['text']
+
+  def obtem_titulo(self, link):
+
+    #Retorna o texto limpo a partir de uma URL
+    return self.alchemy_api.title('url', link)['title']
 
   def obtem_entidades(self, texto):
 

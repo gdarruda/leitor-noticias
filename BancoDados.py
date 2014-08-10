@@ -10,7 +10,7 @@ def contaNoticias(self, link):
 	raise NotImplementedError
 
 #Adiciona uma noticia ao banco de dados
-def adiciona_noticia(self, link, titulo, texto_limpo, id_feed):
+def adiciona_noticia(self, link, titulo, texto_limpo, tweet, id_feed, id_perfil):
 	raise NotImplementedError
 
 #Procura os feeds ativos
@@ -41,12 +41,12 @@ class BancoMySQL(BancoDados):
 
 		return contador_noticia
 
-	def adiciona_noticia(self, link, titulo, texto_limpo, id_feed, id_perfil):
+	def adiciona_noticia(self, link, titulo, texto_limpo, tweet, id_feed, id_perfil):
 
 		cursor_noticia = self.conexao.cursor()
 
-		insert_noticia = ('insert into noticias (link, titulo, corpo, data_importacao, id_feed, id_perfil) values (%s, %s, %s, %s, %s, %s)')
-		dados_noticia = (link, titulo, texto_limpo, date(int(time.strftime('%y')), int(time.strftime('%m')), int(time.strftime('%d'))),id_feed, id_perfil)
+		insert_noticia = ('insert into noticias (link, titulo, corpo, tweet, data_importacao, id_feed, id_perfil) values (%s, %s, %s, %s, %s, %s, %s)')
+		dados_noticia = (link, titulo, texto_limpo, tweet, date(int(time.strftime('%y')), int(time.strftime('%m')), int(time.strftime('%d'))), id_feed, id_perfil)
 
 		cursor_noticia.execute(insert_noticia, dados_noticia)
 

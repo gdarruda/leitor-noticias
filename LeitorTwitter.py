@@ -41,6 +41,7 @@ class LeitorTwitter(object):
 
 				#Chama o AlchemyAPI para limpar o texto
 				texto_processado = api.processa_html(link)
+				titulo = api.obtem_titulo(link)
 
 				#Adiciona noticia no Banco de Dados
-				self.bd.adiciona_noticia(link, tweet.text, texto_processado, None, id_perfil)
+				self.bd.adiciona_noticia(link, titulo, texto_processado, tweet.text, None, id_perfil)

@@ -6,8 +6,9 @@ from LeitorTwitter import LeitorTwitter
 bd = BancoDados.BancoMySQL('garruda', 'garruda', '127.0.0.1', 'noticias')
 
 def executa():
-	# lf = LeitorFeeds(bd)
-	# lf.processa_feeds()
+
+	lf = LeitorFeeds(bd)
+	lf.processa_feeds()
 
 	lt = LeitorTwitter(bd)
 	lt.processa_twitter()

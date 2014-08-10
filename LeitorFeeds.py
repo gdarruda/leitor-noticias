@@ -41,4 +41,4 @@ class LeitorFeeds(object):
 				texto_processado = api.processa_html(post.link)
 
 				#Adiciona noticia no Banco de Dados
-				self.bd.adiciona_noticia(link, post.title, texto_processado, id_feed, None)
+				self.bd.adiciona_noticia(link, post.title, texto_processado, None, id_feed, None)
