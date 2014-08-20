@@ -52,6 +52,41 @@ class BancoMySQL(BancoDados):
 
 		self.conexao.commit()
 
+		return cursor_noticia.lastrowid
+
+	def procura_entidade(self, entidade):
+
+		cursor_entidade = self.conexao.cursor()
+
+		query_entidade = ('select id_entidade from entidades where nome = %s')
+		cursor_entidade.execute(query_entidade, (entidade,))
+
+		return cursor_entidade
+
+	def adiciona_entidade(self, nome, tipo):
+
+		cursor_entidade = self.conexao.cursor()
+
+		insert_entidade = ('insert into entidades (nome, tipo) values (%s, %s)')
+		dados_entidade = (nome, tipo)
+
+		cursor_entidade.execute(insert_entidade, dados_entidade)
+
+		self.conexao.commit()
+
+		return cursor_entidade.lastrowid
+
+	def adiciona_entidade_noticia(self, id_noticia, id_entidade):
+
+		cursor_entidade_noticia = self.conexao.cursor()
+
+		insert_entidade_noticia = ('insert into entidades_x_noticias (id_noticia, id_entidade) values (%s, %s)')
+		dados_entidade_noticia = (id_noticia, id_entidade)
+
+		cursor_entidade_noticia.execute(insert_entidade_noticia, dados_entidade_noticia)
+
+		self.conexao.commit()
+
 	def procura_feeds(self):
 
 		cursor_feeds = self.conexao.cursor()

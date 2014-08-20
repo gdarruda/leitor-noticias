@@ -1,5 +1,7 @@
+import sys
 import feedparser
 import URL
+from GestorNoticias import GestorNoticias
 from Alchemy import Alchemy
 
 class LeitorFeeds(object):
@@ -24,10 +26,13 @@ class LeitorFeeds(object):
 		#API do Alchemy
 		api = Alchemy()
 
+		#Classe para insercao de noticias
+		gn = GestorNoticias(self.bd,api)
+
 		#Para cada feed Atom, processa os links retornados
 		for (id_feed, link) in cursor_feeds:
 
-			#Recupera o catalogo de links RSS
+			#Recupera as ultimas noticias do feed
 			posts = self.le_feed(link)
 
 			#Para cada post, limpa HTML e adiciona no banco de dados
@@ -40,5 +45,5 @@ class LeitorFeeds(object):
 				#Chama o AlchemyAPI para limpar o texto
 				texto_processado = api.processa_html(post.link)
 
-				#Adiciona noticia no Banco de Dados
-				self.bd.adiciona_noticia(link, post.title, texto_processado, None, id_feed, None)
+				#Adiciona noticia ao banco de dados
+				gn.adiciona_noticia(post.link, post.title, texto_processado, None, id_feed, None)

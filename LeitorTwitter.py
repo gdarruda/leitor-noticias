@@ -1,6 +1,7 @@
 import twitter
 import URL
 from Alchemy import Alchemy
+from GestorNoticias import GestorNoticias
 
 class LeitorTwitter(object):
 	'Processa os posts do Twitter'
@@ -29,6 +30,9 @@ class LeitorTwitter(object):
 			#API do Alchemy
 			api = Alchemy()
 
+			#Classe para insercao de noticias
+			gn = GestorNoticias(self.bd, api)
+
 			#Processa todos os tweets
 			for tweet in lt:
 
@@ -44,4 +48,4 @@ class LeitorTwitter(object):
 				titulo = api.obtem_titulo(link)
 
 				#Adiciona noticia no Banco de Dados
-				self.bd.adiciona_noticia(link, titulo, texto_processado, tweet.text, None, id_perfil)
+				gn.adiciona_noticia(link, titulo, texto_processado, tweet.text, None, id_perfil)

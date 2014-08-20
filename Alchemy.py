@@ -22,4 +22,4 @@ class Alchemy(object):
   def obtem_entidades(self, texto):
 
     #Retorna as entidaades encontradas no texto
-    return self.alchemyapi.entities('text', demo_url, {'sentiment': 1})
+    return self.alchemy_api.entities('text', texto, {'sentiment': 1})

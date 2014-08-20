@@ -22,6 +22,7 @@ CREATE TABLE entidades
 (
  id_entidade INTEGER AUTO_INCREMENT,
  nome        TEXT,
+ tipo        TEXT,
  PRIMARY KEY (id_entidade)
 );
 

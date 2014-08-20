@@ -1,6 +1,5 @@
 # coding=utf-8
 import urllib
-import ProcessadorHTML
 
 def extrai_link(tweet):
 
@@ -18,7 +17,7 @@ def extrai_link(tweet):
 	if posic_url_fim == 0:
 		return tweet[posic_url_ini:]
 	else:
-		return tweet[posic_url_ini:posic_url_fim]
+		return tweet[posic_url_ini:posic_url_fim - 1]
 
 
 def url_importada(link, bd):
