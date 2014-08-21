@@ -105,6 +105,29 @@ class BancoMySQL(BancoDados):
 
 		return cursor_tweets
 
+	def adiciona_execucao(self):
+
+		cursor_execucao = self.conexao.cursor()
+
+		data_execucao = date(int(time.strftime('%y')), int(time.strftime('%m')), int(time.strftime('%d')),)
+
+		cursor_execucao.execute('insert into log_execucoes (data_execucao) values (%s)', (data_execucao,))
+
+		self.conexao.commit()
+
+		return cursor_execucao.lastrowid
+
+	def adiciona_erro_execucao(self, id_execucao, descricao):
+
+		cursor_erro = self.conexao.cursor()
+
+		insert_erro = ('insert into log_execucoes_deta (id_execucao, descricao) values (%s,%s)')
+		dados_erro = (id_execucao, descricao)
+
+		cursor_erro.execute(insert_erro, dados_erro)
+
+		self.conexao.commit()
+
 	def fecha_conexao(self):
 
 		self.conexao.close()
