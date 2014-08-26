@@ -47,6 +47,10 @@ class LeitorTwitter(object):
 						if link == None:
 							continue
 
+						#Se o link jah foi importado, no eh necessario importa-lo novamente
+						if URL.url_importada(link, self.bd):
+							continue
+
 						#Chama o AlchemyAPI para limpar o texto
 						texto_processado = api.processa_html(link)
 						titulo = api.obtem_titulo(link)

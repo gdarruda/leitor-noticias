@@ -80,7 +80,7 @@ class BancoMySQL(BancoDados):
 
 		cursor_entidade_noticia = self.conexao.cursor()
 
-		insert_entidade_noticia = ('insert into entidades_x_noticias (id_noticia, id_entidade) values (%s, %s)')
+		insert_entidade_noticia = ('insert ignore into entidades_x_noticias (id_noticia, id_entidade) values (%s, %s)')
 		dados_entidade_noticia = (id_noticia, id_entidade)
 
 		cursor_entidade_noticia.execute(insert_entidade_noticia, dados_entidade_noticia)
