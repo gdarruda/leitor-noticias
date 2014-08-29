@@ -5,26 +5,6 @@ from datetime import datetime, date, timedelta
 class BancoDados:
 	'Classe abstrata para manipulacao de banco de dados'
 
-#Conta noticias importadas
-def contaNoticias(self, link):
-	raise NotImplementedError
-
-#Adiciona uma noticia ao banco de dados
-def adiciona_noticia(self, link, titulo, texto_limpo, tweet, id_feed, id_perfil):
-	raise NotImplementedError
-
-#Procura os feeds ativos
-def procura_feeds(self):
-	raise NotImplementedError
-
-#Procura os perfis de Twitter ativos
-def procura_perfis(self):
-	raise NotImplementedError
-
-#Fecha a conexaoo com o banco
-def fecha_conexao(self):
-	raise NotImplementedError
-
 
 class BancoMySQL(BancoDados):
 	'Classe para manipulacao de banco de dados em MySQL'
@@ -127,6 +107,15 @@ class BancoMySQL(BancoDados):
 		cursor_erro.execute(insert_erro, dados_erro)
 
 		self.conexao.commit()
+
+	def seleciona_noticias(self):
+
+		cursor_noticias = self.conexao.cursor()
+
+		query_noticias = ('select corpo from noticias where corpo != \'\'')
+		cursor_noticias.execute(query_noticias)
+
+		return cursor_noticias
 
 	def fecha_conexao(self):
 
