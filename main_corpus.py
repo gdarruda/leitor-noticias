@@ -1,5 +1,5 @@
 import BancoDados
-from GeraCorpus import GeraCorpus
+from GeraCorpusUAM import GeraCorpus
 
 bd = BancoDados.BancoMySQL('garruda', 'garruda', '127.0.0.1', 'noticias')
 

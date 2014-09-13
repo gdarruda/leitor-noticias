@@ -2,7 +2,7 @@ import BancoDados
 from LogErros import LogErros
 from LeitorFeeds import LeitorFeeds
 from LeitorTwitter import LeitorTwitter
-from GeraCorpus import GeraCorpus
+from GeraCorpusUAM import GeraCorpus
 
 bd = BancoDados.BancoMySQL('garruda', 'garruda', '127.0.0.1', 'noticias')
 

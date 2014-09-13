@@ -112,7 +112,7 @@ class BancoMySQL(BancoDados):
 
 		cursor_noticias = self.conexao.cursor()
 
-		query_noticias = ('select corpo from noticias where corpo != \'\'')
+		query_noticias = ('select corpo, id_noticia from noticias where corpo != \'\' order by id_noticia desc')
 		cursor_noticias.execute(query_noticias)
 
 		return cursor_noticias
