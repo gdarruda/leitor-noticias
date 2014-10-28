@@ -4,62 +4,69 @@ import URL
 from Alchemy import Alchemy
 from GestorNoticias import GestorNoticias
 
+
 class LeitorTwitter(object):
-	'Processa os posts do Twitter'
 
-	def __init__(self, bd, log):
-		self.api = twitter.Api('ou1umOYzfOprMk5YPaZtqG6HG','SdUsK8IAKCITSRvdmVYz0y4uQpCPzAsLJ9rQAim6fek1RGoDDc','2356629355-I35FpdV7hoBmxcZUy4OCscmmwejDrlsX7JL1OPM','2mntySesSInFr6ApQjQOcn1bTfctYKFHVjMFq7kevNtgp')
-		self.log = log
-		self.bd  = bd
+    'Processa os posts do Twitter'
 
-	def le_tweets(self, nome):
+    def __init__(self, bd, log):
+        self.api = twitter.Api('ou1umOYzfOprMk5YPaZtqG6HG', 'SdUsK8IAKCITSRvdmVYz0y4uQpCPzAsLJ9rQAim6fek1RGoDDc',
+                               '2356629355-I35FpdV7hoBmxcZUy4OCscmmwejDrlsX7JL1OPM', '2mntySesSInFr6ApQjQOcn1bTfctYKFHVjMFq7kevNtgp')
+        self.log = log
+        self.bd = bd
 
-		tweets = self.api.GetUserTimeline(screen_name=nome)
+    def le_tweets(self, nome):
 
-		return tweets
+        tweets = self.api.GetUserTimeline(screen_name=nome)
 
-	def processa_twitter(self):
+        return tweets
 
-		#Procura os perfis de Twitter ativos no banco de dados
-		cursor_tweets = self.bd.procura_perfis()
+    def processa_twitter(self):
 
-		#Para cada perfil do Twitter, processa os tweets retornados
-		for (id_perfil, nome) in cursor_tweets:
+        # Procura os perfis de Twitter ativos no banco de dados
+        cursor_tweets = self.bd.procura_perfis()
 
-			try:
-				#Abre os ultimos tweets importados
-				lt = self.le_tweets(nome)
+        # Para cada perfil do Twitter, processa os tweets retornados
+        for (id_perfil, nome) in cursor_tweets:
 
-				#API do Alchemy
-				api = Alchemy()
+            try:
+                # Abre os ultimos tweets importados
+                lt = self.le_tweets(nome)
 
-				#Classe para insercao de noticias
-				gn = GestorNoticias(self.bd, api)
+                # API do Alchemy
+                api = Alchemy()
 
-				#Processa todos os tweets
-				for tweet in lt:
+                # Classe para insercao de noticias
+                gn = GestorNoticias(self.bd, api)
 
-					try:
-						#Extrai o link do tweet
-						link = URL.extrai_link(tweet.text)
+                # Processa todos os tweets
+                for tweet in lt:
 
-						#Se nao houver link, pula para o proximo tweet
-						if link == None:
-							continue
+                    try:
+                        # Extrai o link do tweet
+                        link = URL.extrai_link(tweet.text)
 
-						#Se o link jah foi importado, no eh necessario importa-lo novamente
-						if URL.url_importada(link, self.bd):
-							continue
+                        # Se nao houver link, pula para o proximo tweet
+                        if link is None:
+                            continue
 
-						#Chama o AlchemyAPI para limpar o texto
-						texto_processado = api.processa_html(link)
-						titulo = api.obtem_titulo(link)
+                        # Se o link jah foi importado, no eh necessario
+                        # importa-lo novamente
+                        if URL.url_importada(link, self.bd):
+                            continue
 
-						#Adiciona noticia no Banco de Dados
-						gn.adiciona_noticia(link, titulo, texto_processado, tweet.text, None, id_perfil)
+                        # Chama o AlchemyAPI para limpar o texto
+                        texto_processado = api.processa_html(link)
+                        titulo = api.obtem_titulo(link)
 
-					except:
-						self.log.registra_erro('Erro ao extrair informacoes do link' + link + ' do tweet ' + tweet.text + ':' + traceback.format_exc())
+                        # Adiciona noticia no Banco de Dados
+                        gn.adiciona_noticia(
+                            link, titulo, texto_processado, tweet.text, None, id_perfil)
 
-			except:
-				self.log.registra_erro('Erro ao processar perfil' + str(id_perfil) + ': ' + traceback.format_exc())
+                    except:
+                        self.log.registra_erro(
+                            'Erro ao extrair informacoes do link' + link + ' do tweet ' + tweet.text + ':' + traceback.format_exc())
+
+            except:
+                self.log.registra_erro(
+                    'Erro ao processar perfil' + str(id_perfil) + ': ' + traceback.format_exc())
