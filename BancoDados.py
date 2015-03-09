@@ -1,6 +1,6 @@
 import mysql.connector
 import time
-from datetime import datetime, date, timedelta
+from datetime import date
 
 
 class BancoDados:

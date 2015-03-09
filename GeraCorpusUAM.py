@@ -3,10 +3,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import os
 import csv
 
-
 class GeraCorpus(object):
 
-    'Gera o diretorio de corpus para ser utilizado junto ao MetaAnn'
+    'Gera o diretorio de corpus para ser utilizado junto ao UAM'
 
     def __init__(self, bd):
         self.bd = bd
