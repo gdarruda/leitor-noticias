@@ -3,6 +3,7 @@ from LogErros import LogErros
 from LeitorFeeds import LeitorFeeds
 from LeitorTwitter import LeitorTwitter
 from GeraCorpusUAM import GeraCorpus
+from IdentificadorEntidades import IdentificadorEntidades
 
 bd = BancoDados.BancoMySQL('garruda', 'garruda', '127.0.0.1', 'noticias')
 
@@ -25,4 +26,9 @@ def gera_corpus():
     gc.gera_noticias()
     bd.fecha_conexao()
 
-executa_crawler()
+def identifica_entidades():
+
+    ie = IdentificadorEntidades(bd)
+    ie.atualiza_entidades()
+
+identifica_entidades()

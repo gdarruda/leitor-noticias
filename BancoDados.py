@@ -37,6 +37,15 @@ class BancoMySQL(BancoDados):
 
         return cursor_noticia.lastrowid
 
+    def procura_entidade_semantria(self, entidade):
+
+        cursor_entidade = self.conexao.cursor()
+
+        query_entidade = ('select id_entidade from entidades_semantria where nome = %s')
+        cursor_entidade.execute(query_entidade, (entidade,))
+
+        return cursor_entidade
+
     def procura_entidade(self, entidade):
 
         cursor_entidade = self.conexao.cursor()
@@ -60,11 +69,38 @@ class BancoMySQL(BancoDados):
 
         return cursor_entidade.lastrowid
 
+
+    def adiciona_entidade_semantria(self, nome, tipo):
+
+        cursor_entidade = self.conexao.cursor()
+
+        insert_entidade = (
+            'insert into entidades_semantria (nome, tipo) values (%s, %s)')
+        dados_entidade = (nome, tipo)
+
+        cursor_entidade.execute(insert_entidade, dados_entidade)
+
+        self.conexao.commit()
+
+        return cursor_entidade.lastrowid
+
     def adiciona_entidade_noticia(self, id_noticia, id_entidade):
 
         cursor_entidade_noticia = self.conexao.cursor()
 
         insert_entidade_noticia = ('insert ignore into entidades_x_noticias (id_noticia, id_entidade) values (%s, %s)')
+        dados_entidade_noticia = (id_noticia, id_entidade)
+
+        cursor_entidade_noticia.execute(
+            insert_entidade_noticia, dados_entidade_noticia)
+
+        self.conexao.commit()
+
+    def adiciona_entidade_noticia_semantria(self, id_noticia, id_entidade):
+
+        cursor_entidade_noticia = self.conexao.cursor()
+
+        insert_entidade_noticia = ('insert ignore into entidades_semantria_x_noticias (id_noticia, id_entidade) values (%s, %s)')
         dados_entidade_noticia = (id_noticia, id_entidade)
 
         cursor_entidade_noticia.execute(
@@ -119,6 +155,15 @@ class BancoMySQL(BancoDados):
         cursor_noticias = self.conexao.cursor()
 
         query_noticias = ('select corpo, id_noticia from noticias where corpo != \'\' order by id_noticia desc')
+        cursor_noticias.execute(query_noticias)
+
+        return cursor_noticias
+
+    def seleciona_noticias_corpus(self):
+
+        cursor_noticias = self.conexao.cursor()
+
+        query_noticias = ('select id_noticia, corpo from noticias n where n.ind_corpus = \'S\' and id_noticia != 2383')
         cursor_noticias.execute(query_noticias)
 
         return cursor_noticias
