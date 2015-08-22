@@ -1,5 +1,6 @@
 import semantria
 import nltk
+from Alchemy import Alchemy
 
 class IdentificadorEntidades(object):
 
@@ -77,3 +78,24 @@ class IdentificadorEntidades(object):
                     self.bd.adiciona_entidade_noticia_semantria(self.retorna_chave(resultado['id']), id_entidade)
             else:
                 print('Sem entidade:', resultado['id'])
+
+    def identifica_entidades_tweets(self):
+
+        api = Alchemy()
+
+        for (id_noticia, tweets) in self.bd.seleciona_tweets():
+
+            entidades = api.obtem_entidades(tweets)
+
+            for entidade in entidades['entities']:
+
+                entidade_banco = self.bd.procura_entidade(
+                    entidade['text']).fetchone()
+
+                if entidade_banco != None:
+                    id_entidade = entidade_banco[0]
+                else:
+                    id_entidade = self.bd.adiciona_entidade(
+                        entidade['text'], entidade['type'])
+
+                self.bd.adiciona_entidade_tweet(id_noticia, id_entidade)

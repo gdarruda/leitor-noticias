@@ -96,6 +96,18 @@ class BancoMySQL(BancoDados):
 
         self.conexao.commit()
 
+    def adiciona_entidade_tweet(self, id_noticia, id_entidade):
+
+        cursor_entidade_noticia = self.conexao.cursor()
+
+        insert_entidade_noticia = ('insert ignore into entidades_x_tweets (id_noticia, id_entidade) values (%s, %s)')
+        dados_entidade_noticia = (id_noticia, id_entidade)
+
+        cursor_entidade_noticia.execute(
+            insert_entidade_noticia, dados_entidade_noticia)
+
+        self.conexao.commit()
+
     def adiciona_entidade_noticia_semantria(self, id_noticia, id_entidade):
 
         cursor_entidade_noticia = self.conexao.cursor()
@@ -163,10 +175,19 @@ class BancoMySQL(BancoDados):
 
         cursor_noticias = self.conexao.cursor()
 
-        query_noticias = ('select id_noticia, corpo from noticias n where n.ind_corpus = \'S\' and id_noticia != 2383')
+        query_noticias = ('select id_noticia, corpo from noticias n where n.ind_corpus = \'S\'')
         cursor_noticias.execute(query_noticias)
 
         return cursor_noticias
+
+    def seleciona_tweets(self):
+
+        cursor_tweets = self.conexao.cursor()
+
+        query_tweets = ('select id_noticia, tweet from noticias n where not exists (select * from entidades_x_tweets et where et.id_noticia = n.id_noticia)')
+        cursor_tweets.execute(query_tweets)
+
+        return cursor_tweets
 
     def fecha_conexao(self):
 
