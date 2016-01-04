@@ -29,7 +29,6 @@ def gera_corpus():
 def identifica_entidades():
 
     ie = IdentificadorEntidades(bd)
-    # ie.atualiza_entidades()
     ie.identifica_entidades_tweets()
 
-gera_corpus()
+identifica_entidades()

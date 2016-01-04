@@ -184,7 +184,7 @@ class BancoMySQL(BancoDados):
 
         cursor_tweets = self.conexao.cursor()
 
-        query_tweets = ('select id_noticia, tweet from noticias n where not exists (select * from entidades_x_tweets et where et.id_noticia = n.id_noticia)')
+        query_tweets = ('select id_noticia, tweet from noticias n where ind_corpus = \'S\'')
         cursor_tweets.execute(query_tweets)
 
         return cursor_tweets
